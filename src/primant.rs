@@ -1,5 +1,6 @@
 use core::fmt::{Debug, Display};
 use num_traits::float::FloatCore;
+use num_traits::{PrimInt, ToPrimitive};
 
 /// A fraction between 0 and 1 (inclusive).
 ///
@@ -121,18 +122,21 @@ impl Primant {
     /// # Panics
     ///
     /// Panics if the denominator is zero or if the result would not fit in a `Primant`.
-    pub fn from_ratio(numerator: u32, denominator: u32) -> Self {
-        assert_ne!(denominator, 0, "denominator must not be zero");
+    pub fn from_ratio<T: PrimInt + Debug>(numerator: T, denominator: T) -> Self {
+        assert_ne!(denominator, T::zero(), "denominator must not be zero");
         assert!(numerator <= denominator, "numerator must not be greater than the denominator");
-        unsafe { Self::from_ratio_unchecked(numerator, denominator) }
+        let numerator = numerator.to_u64().unwrap();
+        let denominator = denominator.to_u64().unwrap();
+        let value = numerator * u32::MAX as u64 / denominator;
+        Primant(value.to_u32().unwrap())
     }
 
     /// Creates a new [`Primant`] from a numerator and a denominator.
     ///
     /// Returns `None` if the denominator is zero or if the result would not fit in a `Primant`.
-    pub fn try_from_ratio(numerator: u32, denominator: u32) -> Option<Self> {
-        if denominator == 0 || numerator > denominator { return None; }
-        Some(unsafe { Self::from_ratio_unchecked(numerator, denominator) })
+    pub fn try_from_ratio<T: PrimInt + Debug>(numerator: T, denominator: T) -> Option<Self> {
+        if denominator.is_zero() || numerator > denominator { return None; }
+        Some(Self::from_ratio(numerator, denominator))
     }
 
     /// Creates a new [`Primant`] from a numerator and a denominator.
@@ -147,17 +151,6 @@ impl Primant {
         assert_ne!(denominator, 0, "denominator must not be zero");
 
         Primant(numerator.saturating_mul(u32::MAX / denominator))
-    }
-
-    /// Creates a new [`Primant`] from a numerator and a denominator.
-    ///
-    /// # Safety
-    ///
-    /// This function doesn't perform any checks.
-    /// If called with invalid arguments, it produces undefined behavior.
-    /// Prefer using [`Primant::from_ratio`] or [`Primant::try_from_ratio`] instead.
-    pub unsafe fn from_ratio_unchecked(numerator: u32, denominator: u32) -> Self {
-        Primant(numerator.unchecked_mul(u32::MAX / denominator))
     }
 }
 

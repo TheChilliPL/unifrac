@@ -1,6 +1,6 @@
 [package]
 name = "unifrac"
-version = "0.1.0"
+version = "0.1.1"
 description = "A crate for working with normalized fractional values."
 authors = ["TheChilliPL <chilli@thechilli.dev>"]
 repository = "https://github.com/TheChilliPL/unifrac"
