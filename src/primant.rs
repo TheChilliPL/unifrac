@@ -147,10 +147,10 @@ impl Primant {
     /// # Panics
     ///
     /// Panics if the denominator is zero.
-    pub fn from_ratio_saturating(numerator: u32, denominator: u32) -> Self {
-        assert_ne!(denominator, 0, "denominator must not be zero");
-
-        Primant(numerator.saturating_mul(u32::MAX / denominator))
+    pub fn from_ratio_saturating<T: PrimInt + Debug>(numerator: T, denominator: T) -> Self {
+        assert_ne!(denominator, T::zero(), "denominator must not be zero");
+        if numerator > denominator { return Primant::MAX; }
+        Self::from_ratio(numerator, denominator)
     }
 }
 

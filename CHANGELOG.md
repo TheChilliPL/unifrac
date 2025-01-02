@@ -10,6 +10,12 @@ Dates in this file are in `YYYY-MM-DD (HH:MM)` format in [Europe/Warsaw] timezon
 [Europe/Warsaw]: https://en.wikipedia.org/wiki/Europe/Warsaw
 [^1]: Standard Time: CET/UTC+1, Daylight Saving Time: CEST/UTC+2
 
+## [0.1.2] - 2025-01-02 09:08
+
+### Changed
+
+- `Primant::from_ratio_saturating` method made generic.
+
 ## [0.1.1] - 2025-01-02 09:02
 
 ### Changed
